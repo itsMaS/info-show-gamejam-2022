@@ -28,6 +28,8 @@ public class Interactable : MonoBehaviour
     private Vector2 lastPosition;
     public Vector2 moveVelocity { get; set; }
 
+    public Vector2 pickupPosition => (Vector2)transform.position + dragPointOffset;
+
     public virtual void Click()
     {
         onClick.Invoke();
@@ -56,13 +58,13 @@ public class Interactable : MonoBehaviour
         Gizmos.DrawSphere((Vector2)transform.position + dragPointOffset, 0.05f);
     }
 
-    public void BeginDrag(Vector2 cursorPosition)
+    public virtual void BeginDrag(Vector2 cursorPosition)
     {
         isBeingDragged = true;
         dragPickupOffset = (Vector2)transform.position - cursorPosition;
         onDragBegin.Invoke();
     }
-    public void EndDrag()
+    public virtual void EndDrag()
     {
         isBeingDragged = false;
         onDragEnd.Invoke();

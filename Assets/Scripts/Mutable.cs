@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Mutable : Interactable
 {
-    internal void Mutate(Reactor reactor)
+    public virtual void Mutate(Reactor reactor)
     {
     }
 }

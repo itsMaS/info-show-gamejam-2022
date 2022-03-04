@@ -33,7 +33,12 @@ public class State : MonoBehaviour
     }
 
     [SerializeField] GameConfigSO configSO;
+    [SerializeField] PolygonCollider2D bounds;
 
 
+    public bool PointWithinBounds(Vector2 point)
+    {
+        return bounds.OverlapPoint(point);
+    }
     public static GameConfigSO config => State.Instance.configSO;
 }

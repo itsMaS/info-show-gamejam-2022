@@ -13,5 +13,15 @@ public class GameConfigSO : ScriptableObject
         public float baseReactorRange;
     }
 
+    [System.Serializable]
+    public class Human
+    {
+        public float maxSpeed;
+        public float accelerationSpeed;
+        public Vector2 waitTime;
+        public Vector2 targetDistance;
+    }
+
     public Reactor reactor;
+    public Human human;
 }

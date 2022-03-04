@@ -32,4 +32,9 @@ public static class Utilities
 
         sr.color = color;
     }
+
+    public static float PickRandomFromRange(this Vector2 range)
+    {
+        return Mathf.Lerp(range.x, range.y, Random.value);
+    }
 }

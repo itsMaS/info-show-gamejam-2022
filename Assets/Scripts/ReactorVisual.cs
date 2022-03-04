@@ -12,6 +12,9 @@ public class ReactorVisual : MonoBehaviour
     [SerializeField] SpriteRenderer explosion;
     [SerializeField] SpriteRenderer rangeIndicator;
 
+    [Header("Parameters")]
+    [SerializeField] float clickAnimationDuration;
+
     Reactor reactor;
 
     float initialBodyScale = 1;
@@ -41,6 +44,6 @@ public class ReactorVisual : MonoBehaviour
 
     private void AddFuel(float arg0)
     {
-        body.transform.DOScale(initialBodyScale*0.8f, 0.5f).SetLoops(2, LoopType.Yoyo).From(initialBodyScale);
+        body.transform.DOScale(initialBodyScale*0.8f, clickAnimationDuration/2).SetLoops(2, LoopType.Yoyo).From(initialBodyScale).SetEase(Ease.InOutSine);
     }
 }
