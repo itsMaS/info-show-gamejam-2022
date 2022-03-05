@@ -28,7 +28,7 @@ public class Interactable : MonoBehaviour, IPivotable
     private Vector2 lastPosition;
     public Vector2 moveVelocity { get; set; }
 
-    public Vector2 pickupPosition => (Vector2)transform.position + dragPointOffset;
+    public Vector2 pickupPosition => Vector2.Scale(dragPointOffset, transform.localScale);
 
     Collider2D col;
 
@@ -49,8 +49,7 @@ public class Interactable : MonoBehaviour, IPivotable
             onDrag.Invoke();
             if (positionChangeOverDrag)
             {
-                Vector2 target = usesDragOffset ? dragTarget + dragPickupOffset : dragTarget;
-                transform.position = Vector2.Lerp(transform.position, target - dragPointOffset, 20 * Time.deltaTime);
+                transform.position = Vector2.Lerp(transform.position, dragTarget - pickupPosition, 20 * Time.deltaTime);
 
             }
         }
@@ -61,7 +60,7 @@ public class Interactable : MonoBehaviour, IPivotable
 
     protected virtual void OnDrawGizmos()
     {
-        Gizmos.DrawSphere((Vector2)transform.position + dragPointOffset, 0.05f);
+        Gizmos.DrawSphere((Vector2)transform.position + pickupPosition, 0.05f);
     }
 
     public virtual void BeginDrag(Vector2 cursorPosition)

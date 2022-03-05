@@ -12,10 +12,14 @@ public class Genome
 
     private GameConfigSO.Genes config => State.config.genes;
 
+    public Genome()
+    {
+    }
+
     /// <summary>
     /// New generic genome generation
     /// </summary>
-    public Genome()
+    public Genome(bool debug)
     {
         Cache.Clear();
         foreach (var gene in config.defaultGenome)

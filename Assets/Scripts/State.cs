@@ -11,19 +11,14 @@ public class State : MonoBehaviour
     {
         get
         {
-#if UNITY_EDITOR
-            if(!Application.isPlaying)
-                return FindObjectOfType<State>();
-            else
-#endif
-                return _instance;
+            return _instance;
         }
     }
 
 
     private void Awake()
     {
-        if(!Instance)
+        if(!_instance)
         {
             Initialize();
             DontDestroyOnLoad(gameObject);
@@ -36,6 +31,19 @@ public class State : MonoBehaviour
     private void Start()
     {
         Events.Start();
+
+        SpawnInitialHumans();
+    }
+
+    private void SpawnInitialHumans()
+    {
+        int populationCount = config.gameplay.startingPopulationCount;
+        for (int i = 0; i < populationCount; i++)
+        {
+            float offset = (float)i / populationCount;
+            Vector2 direction = Vector2.up * 0.5f * Mathf.Sin(Mathf.PI * 2 * offset) + Vector2.right * Mathf.Cos(Mathf.PI * 2 * offset);
+            SpawnHuman(direction * config.gameplay.rangeFromReactor, new Genome(true), config.gameplay.startingPopulationAge.PickRandom());
+        }
     }
 
     private void Initialize()
@@ -53,15 +61,16 @@ public class State : MonoBehaviour
         return bounds.OverlapPoint(point);
     }
 
-    public void SpawnHuman(Vector2 position, Genome genome)
+    public void SpawnHuman(Vector2 position, Genome genome, float age = 0)
     {
         Transform editorParent = null;
 #if UNITY_EDITOR
         editorParent = GameObject.Find("Humans").transform;
 #endif
-        Human human = Instantiate(humanPrefab, position, Quaternion.identity, editorParent).GetComponent<Human>();
+        Human human = Instantiate(humanPrefab.gameObject, position, Quaternion.identity, editorParent).GetComponent<Human>();
 
-        human.Spawn(genome);
+        human.Spawn(genome, age);
+        Events.SubscribeToHumanEvents(human);
     }
 
 
@@ -83,12 +92,17 @@ public class GameEvents
     {
         foreach (var human in GameObject.FindObjectsOfType<Human>())
         {
+            SubscribeToHumanEvents(human);
+        }
+    }
+
+    public void SubscribeToHumanEvents(Human human)
+    {
             human.OnMutate.AddListener((oldGenome, newGenome) => onMutation?.Invoke(human, oldGenome, newGenome));
             human.onDragBegin.AddListener(() => onStartDraggingHuman.Invoke(human));
             human.onDragEnd.AddListener(() => onStopDraggingHuman.Invoke(human));
 
-            human.target.onInteractableDragHover.AddListener(interactable => onCrossBreedHover.Invoke((Human)interactable, human));
-            human.target.onInteractableDragUnhover.AddListener(interactable => onCrossBreedUnhover.Invoke((Human)interactable, human));
-        }
+            human.onBreedHover.AddListener((h1, h2) => onCrossBreedHover.Invoke(h2,h1));
+            human.onBreedUnhover.AddListener((h1, h2) => onCrossBreedUnhover.Invoke(h2,h1));
     }
 }

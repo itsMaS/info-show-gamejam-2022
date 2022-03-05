@@ -72,7 +72,7 @@ public class GenesDisplay : MonoBehaviour
             cmp.Populate(gene.data.name, neutralColor, gene.value, gene.value, GeneDisplayNode.ArrowState.None);
         }
     }
-    internal void Update(Human original)
+    internal void Repopulate(Human original)
     {
         for (int i = 0; i < Nodes.Count; i++)
         {
@@ -80,7 +80,7 @@ public class GenesDisplay : MonoBehaviour
             Nodes[i].Populate(gene.data.name, neutralColor, gene.value, gene.value, GeneDisplayNode.ArrowState.None);
         }
     }
-    public void Update(Human human1, Human human2)
+    public void Repopulate(Human human1, Human human2)
     {
         for (int i = 0; i < Nodes.Count; i++)
         {

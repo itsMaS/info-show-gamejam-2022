@@ -15,7 +15,7 @@ MonoBehaviour:
   reactor:
     baseFuelRequirement: 10
     baseFuelPerClick: 1
-    baseReactorRange: 5
+    baseReactorRange: 3
     radioctivityFaloff:
       serializedVersion: 2
       m_Curve:
@@ -46,6 +46,7 @@ MonoBehaviour:
     waitTime: {x: 1, y: 5}
     targetDistance: {x: 2, y: 5}
     walkSpeedOverGene: {x: 0.5, y: 5}
+    baseLifespan: 120
     offspringOverFertility:
       serializedVersion: 2
       m_Curve:
@@ -79,8 +80,36 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    sizeOverAge:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.6
+        inSlope: 1.221211
+        outSlope: 1.221211
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.04094293
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0.0629453
+        outSlope: 0.0629453
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.18734491
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   genes:
     maxMutations: 1
     defaultGenome:
     - {fileID: 11400000, guid: 67b292606cdfd1341a7ce283d78a66df, type: 2}
     - {fileID: 11400000, guid: ac7027b2b334f4049a727be73788df22, type: 2}
+  gameplay:
+    startingPopulationAge: {x: 0.5, y: 0.7}
+    startingPopulationCount: 3
+    rangeFromReactor: 4

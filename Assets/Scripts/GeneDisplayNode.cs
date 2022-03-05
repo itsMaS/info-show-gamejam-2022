@@ -40,5 +40,13 @@ public class GeneDisplayNode : MonoBehaviour
             default:
                 break;
         }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+    }
+    public static GeneDisplayNode Instantiate(GeneDisplayNode example, Transform parent)
+    {
+        var cmp = Instantiate(example.gameObject, parent).GetComponent<GeneDisplayNode>();
+        cmp.gameObject.SetActive(true);
+
+        return cmp;
     }
 }

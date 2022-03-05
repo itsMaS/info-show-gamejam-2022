@@ -24,7 +24,17 @@ public class GameConfigSO : ScriptableObject
         public Vector2 waitTime;
         public Vector2 targetDistance;
         public Vector2 walkSpeedOverGene;
+        public float baseLifespan = 120;
         public AnimationCurve offspringOverFertility;
+        public AnimationCurve sizeOverAge;
+    }
+
+    [System.Serializable]
+    public class Gameplay
+    {
+        public Vector2 startingPopulationAge;
+        public int startingPopulationCount;
+        public float rangeFromReactor;
     }
 
     [System.Serializable]
@@ -37,4 +47,5 @@ public class GameConfigSO : ScriptableObject
     public Reactor reactor;
     public Human human;
     public Genes genes;
+    public Gameplay gameplay;
 }

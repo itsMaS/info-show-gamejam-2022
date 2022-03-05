@@ -9,6 +9,8 @@ public class Human : Interactable
     public UnityEvent<Genome, Genome> OnMutate;
     public UnityEvent<Human, Human> OnBreed;
     public UnityEvent<Genome> OnSpawn;
+    public UnityEvent<Human,Human> onBreedHover;
+    public UnityEvent<Human,Human> onBreedUnhover;
 
     GameConfigSO.Human config => State.config.human;
 
@@ -17,9 +19,14 @@ public class Human : Interactable
     [SerializeField] GeneSO speedGene;
     [SerializeField] GeneSO fertilityGene;
 
+    [SerializeField] Collider2D shadowCollider;
     [SerializeField] float accelerationSpeed;
 
+    float Size => config.sizeOverAge.Evaluate(Age);
+    public float Age { get; private set; }
+
     Vector2 moveTarget;
+    
     public Vector2 velocity;
 
     Coroutine movementCoroutine;
@@ -35,35 +42,58 @@ public class Human : Interactable
     private void Start()
     {
         movementCoroutine = StartCoroutine(Movement());
+        target.onInteractableDraggedOn.AddListener(DraggedOn);
 
-        genome = new Genome();
-
-        target.onInteractableDraggedOn.AddListener(Breed);
+        target.onInteractableDragHover.AddListener(DragHover);
+        target.onInteractableDragUnhover.AddListener(DragUnhover);
     }
 
-    public void Spawn(Genome genome)
+    private void DraggedOn(Interactable arg0)
     {
+        if (arg0 is Human) Breed((Human)arg0);
+    }
+
+    public void Spawn(Genome genome, float age)
+    {
+        this.Age = age;
         this.genome = genome;
         OnSpawn.Invoke(genome);
     }
 
-    private void Breed(Interactable interactable)
+    public void DragHover(Interactable interactable)
     {
-        Human human = (Human)interactable;
-        Destroy(human.gameObject);
-        Destroy(gameObject);
-
-        if(genome.TryGetGeneValue(fertilityGene, out float fertility))
+        if(interactable is Human)
         {
-            int offspring = Mathf.RoundToInt(config.offspringOverFertility.Evaluate(fertility));
-            for (int i = 0; i < offspring; i++)
-            {
-                State.Instance.SpawnHuman(transform.position, new Genome(genome, human.genome));
-            }
+            onBreedHover.Invoke(this, (Human)interactable);
+        }
+    }
+    public void DragUnhover(Interactable interactable)
+    {
+        if (interactable is Human)
+        {
+            onBreedUnhover.Invoke(this, (Human)interactable);
+        }
+    }
+
+    private void Breed(Human human)
+    {
+        genome.TryGetGeneValue(fertilityGene, out float f1);
+        human.genome.TryGetGeneValue(fertilityGene, out float f2);
+
+        float fertility = Mathf.Lerp(f1, f2, 0.5f);
+
+        int offspring = Mathf.RoundToInt(config.offspringOverFertility.Evaluate(fertility));
+        for (int i = 0; i < offspring; i++)
+        {
+            State.Instance.SpawnHuman(transform.position, new Genome(genome, human.genome));
         }
 
-
         OnBreed.Invoke(this, human);
+    }
+
+    public virtual void Die()
+    {
+        Destroy(gameObject);
     }
 
     public virtual void Mutate(float radioctivity)
@@ -80,11 +110,15 @@ public class Human : Interactable
 
         if (movementCoroutine != null) StopCoroutine(movementCoroutine);
         movementCoroutine = StartCoroutine(Movement());
+
+        shadowCollider.enabled = true;
     }
     public override void BeginDrag(Vector2 cursorPosition)
     {
         base.BeginDrag(cursorPosition);
         velocity = Vector3.zero;
+
+        shadowCollider.enabled = false;
     }
     IEnumerator Movement()
     {
@@ -108,7 +142,8 @@ public class Human : Interactable
     protected override void Update()
     {
         base.Update();
-        
+        Ageing();
+
         if(!isBeingDragged)
         {
             genome.TryGetGeneValue(speedGene, out float speedGeneValue);
@@ -118,13 +153,16 @@ public class Human : Interactable
         }
     }
 
+    private void Ageing()
+    {
+        Age += Time.deltaTime / config.baseLifespan;
+        transform.localScale = Vector3.one * Size;
+
+        if (Age >= 1) Die();
+    }
+
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();
-
-        Gizmos.color = Color.yellow;
-
-        Gizmos.DrawWireSphere(transform.position, config.targetDistance.x);
-        Gizmos.DrawWireSphere(transform.position, config.targetDistance.y);
     }
 }

@@ -28,13 +28,13 @@ public class WorldUI : MonoBehaviour
     private void BreedUnhover(Human original, Human target)
     {
         Debug.Log($"original is {target.gameObject.name}");
-        humanDisplay.Update(original);
+        humanDisplay.Repopulate(original);
     }
 
     private void BreedHover(Human original, Human target)
     {
         Debug.Log($"original is {original.gameObject.name} new {target.gameObject.name}");
-        humanDisplay.Update(original, target);
+        humanDisplay.Repopulate(original, target);
     }
 
     private void HideHumanInfo(Human arg0)
