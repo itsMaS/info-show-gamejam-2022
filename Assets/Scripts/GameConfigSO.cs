@@ -23,16 +23,14 @@ public class GameConfigSO : ScriptableObject
         public float accelerationSpeed;
         public Vector2 waitTime;
         public Vector2 targetDistance;
+        public Vector2 walkSpeedOverGene;
+        public AnimationCurve offspringOverFertility;
     }
 
     [System.Serializable]
     public class Genes
     {
-        public AnimationCurve mutationChanceDistribution;
-        public AnimationCurve chanceBoostOverRadiation;
-        public AnimationCurve mutationCountOverRadiation;
         public int maxMutations;
-
         public List<GeneSO> defaultGenome; 
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider2D)), DisallowMultipleComponent, SelectionBase]
-public class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour, IPivotable
 {
     public int priority;
 
@@ -30,11 +30,17 @@ public class Interactable : MonoBehaviour
 
     public Vector2 pickupPosition => (Vector2)transform.position + dragPointOffset;
 
+    Collider2D col;
+
+    public virtual void Awake()
+    {
+        col = GetComponent<Collider2D>();
+    }
+
     public virtual void Click()
     {
         onClick.Invoke();
     }
-
 
     protected virtual void Update()
     {
@@ -60,12 +66,17 @@ public class Interactable : MonoBehaviour
 
     public virtual void BeginDrag(Vector2 cursorPosition)
     {
+        col.enabled = false;
+
         isBeingDragged = true;
         dragPickupOffset = (Vector2)transform.position - cursorPosition;
         onDragBegin.Invoke();
+
     }
     public virtual void EndDrag()
     {
+        col.enabled = true;
+
         isBeingDragged = false;
         onDragEnd.Invoke();
     }

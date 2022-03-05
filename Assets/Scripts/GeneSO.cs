@@ -6,8 +6,6 @@ using UnityEngine;
 public class GeneSO : ScriptableObject
 {
     public Vector2 defaultRange;
-    public Vector2 clampRange;
-    public float mutationMultiplier = 1;
 }
 [System.Serializable]
 public class Gene
@@ -18,11 +16,16 @@ public class Gene
     public Gene(GeneSO data)
     {
         this.data = data;
-        value = data.defaultRange.PickRandomFromRange();
+        value = data.defaultRange.PickRandom();
     }
     public Gene(Gene clone)
     {
         data = clone.data;
         value = clone.value;
+    }
+    public Gene(GeneSO data, float value)
+    {
+        this.data = data;
+        this.value = value;
     }
 }

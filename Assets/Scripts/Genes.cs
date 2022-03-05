@@ -12,6 +12,9 @@ public class Genome
 
     private GameConfigSO.Genes config => State.config.genes;
 
+    /// <summary>
+    /// New generic genome generation
+    /// </summary>
     public Genome()
     {
         Cache.Clear();
@@ -20,11 +23,16 @@ public class Genome
             Genes.Add(new Gene(gene));
         }
     }
+
+    /// <summary>
+    /// Mutation
+    /// </summary>
+    /// <param name="old"></param>
+    /// <param name="radiation"></param>
     public Genome(Genome old, float radiation)
     {
         Cache.Clear();
-        int mutations = Mathf.CeilToInt(config.maxMutations * config.mutationCountOverRadiation.Evaluate(radiation) * Random.value);
-        string info = $"Mutation:\nRadiation received: {radiation}\nMutation count: {mutations},\nMutated genes:";
+        int mutations =  Mathf.CeilToInt(Random.value* config.maxMutations);//Mathf.CeilToInt(config.maxMutations * config.mutationCountOverRadiation.Evaluate(radiation) * Random.value);
 
         Genes = old.Genes.Select(item => new Gene(item)).ToList();
 
@@ -32,20 +40,29 @@ public class Genome
         {
             Gene picked = Genes.PickRandom();
 
-            float deviation = (config.mutationChanceDistribution.Evaluate(Random.value) + config.chanceBoostOverRadiation.Evaluate(radiation))*picked.data.mutationMultiplier * (Random.value > 0.5f ? -1 : 1);
-
             float oldValue = picked.value;
-            picked.value = Mathf.Clamp(picked.value + deviation,picked.data.clampRange.x, picked.data.clampRange.y);
+            picked.value = Random.value;
             //picked.value += deviation;
-
-            info += $"\n{i+1}. {picked.data.name} mutated by {deviation}, previous value was {oldValue}, current value is {picked.value}";
         }
-        Debug.Log($"{info}");
     }
+
+    /// <summary>
+    /// Cross breeding
+    /// </summary>
+    /// <param name="mother"></param>
+    /// <param name="father"></param>
     public Genome(Genome mother, Genome father)
     {
         Cache.Clear();
         // Implement
+
+        Genes = new List<Gene>();
+
+        for (int i = 0; i < mother.Genes.Count; i++)
+        {
+            float offspringValue = Mathf.Lerp(mother.Genes[i].value, father.Genes[i].value, Random.value);
+            Genes.Add(new Gene(mother.Genes[i].data, offspringValue));
+        }
     }
 
 

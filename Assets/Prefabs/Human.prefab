@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 4693179667766554957}
   - component: {fileID: 1433865999}
   - component: {fileID: 1986051134320230379}
+  - component: {fileID: 3389844492098943627}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -178,8 +179,10 @@ MonoBehaviour:
   OnMutate:
     m_PersistentCalls:
       m_Calls: []
+  OnBreed:
+    m_PersistentCalls:
+      m_Calls: []
   speedGene: {fileID: 11400000, guid: 67b292606cdfd1341a7ce283d78a66df, type: 2}
-  maxSpeed: 0
   accelerationSpeed: 0
   velocity: {x: 0, y: 0}
 --- !u!114 &4693179667766554956
@@ -250,6 +253,28 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &3389844492098943627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4693179667766554960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665aa7545abbcdf478fa73f3add66f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onInteractableDraggedOn:
+    m_PersistentCalls:
+      m_Calls: []
+  onInteractableDragHover:
+    m_PersistentCalls:
+      m_Calls: []
+  onInteractableDragUnhover:
+    m_PersistentCalls:
+      m_Calls: []
+  dragPointOffset: {x: 0, y: 1.24}
 --- !u!1 &4693179668180618527
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +347,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -5
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
+  m_Color: {r: 0.09019608, g: 0.05490196, b: 0.09803922, a: 0.5019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

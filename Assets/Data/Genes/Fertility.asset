@@ -10,8 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7ad2d18f3b090b408129fce42d27483, type: 3}
-  m_Name: Longevity
+  m_Name: Fertility
   m_EditorClassIdentifier: 
-  defaultRange: {x: 1, y: 10}
-  clampRange: {x: 1, y: 100}
-  mutationMultiplier: 2
+  defaultRange: {x: 0.2, y: 0.5}
