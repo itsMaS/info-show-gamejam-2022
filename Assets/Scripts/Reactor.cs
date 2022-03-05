@@ -10,26 +10,30 @@ public class Reactor : Interactable
     public UnityEvent<float> OnAddFuel;
     public UnityEvent onExplode;
 
-    float currentFuel;
+    public float currentFuel { get; private set; }
+
+    public float fuelRequired => config.baseFuelRequirement;
+    public float radioctivityOnExplosion => config.baseRadioactivity;
 
     public void AddFuel(float amount)
     {
-        OnAddFuel.Invoke(amount);
-
         currentFuel += amount;
-        if(currentFuel >= config.baseFuelRequirement)
+        OnAddFuel.Invoke(Mathf.Clamp(currentFuel/fuelRequired,0,1));
+        if(currentFuel >= fuelRequired)
         {
+            currentFuel -= fuelRequired;
             Explode();
-            currentFuel -= config.baseFuelRequirement;
         }
     }
     public void Explode()
     {
-        foreach (var col in Physics2D.OverlapCircleAll(transform.position, config.baseReactorRange))
+        Vector2 reactorCenter = (Vector2)transform.position + dragPointOffset;
+        foreach (var col in Physics2D.OverlapCircleAll(reactorCenter , config.baseReactorRange))
         {
-            if(col.TryGetComponent(out Mutable mutable))
+            if(col.TryGetComponent(out Human human))
             {
-                mutable.Mutate(this);
+                float radioctivity = config.radioctivityFaloff.Evaluate(Mathf.InverseLerp(config.baseReactorRange, 0, Vector2.Distance(human.transform.position, reactorCenter))) * radioctivityOnExplosion;
+                human.Mutate(radioctivity);
             }
         }
 
@@ -41,9 +45,10 @@ public class Reactor : Interactable
         base.Click();
         AddFuel(config.baseFuelPerClick);
     }
-
-    private void OnDrawGizmos()
+    
+    protected override void OnDrawGizmos()
     {
+        base.OnDrawGizmos();
         Gizmos.DrawWireSphere(transform.position, config.baseReactorRange);
     }
 }

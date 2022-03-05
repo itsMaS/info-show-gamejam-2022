@@ -20,6 +20,7 @@ public class HumanVisual : MonoBehaviour
     [SerializeField] float walkShadowSineAmplitude;
 
     Human human;
+    Animation anim;
 
     float baseShadowOpacity;
     Quaternion rotationTarget;
@@ -29,6 +30,7 @@ public class HumanVisual : MonoBehaviour
     private void Awake()
     {
         human = GetComponent<Human>();
+        anim = GetComponent<Animation>();
 
         baseShadowOpacity = shadow.color.a;
         initialLocalBodyPosition = body.transform.localPosition;
@@ -40,9 +42,14 @@ public class HumanVisual : MonoBehaviour
         human.onDrag.AddListener(Dragging);
         human.onDragBegin.AddListener(BeginDrag);
         human.onDragEnd.AddListener(EndDrag);
+        human.OnMutate.AddListener(Mutate);
     }
 
-    private void Update()
+    private void Mutate(Genome oldGenome, Genome newGenome)
+    {
+        anim.Play("Mutate");
+    }
+  private void Update()
     {
         body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTarget, Time.deltaTime * rotationAccelerationSpeed);
 

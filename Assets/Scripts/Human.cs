@@ -1,23 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Human : Mutable
+public class Human : Interactable
 {
+    public UnityEvent<Genome, Genome> OnMutate;
+
     GameConfigSO.Human config => State.config.human;
 
-    public class Gene
-    {
-        public string name;
-        public string description;
-    }
+    Genome genome;
 
-    public class Genome
-    {
-        List<Gene> Genes = new List<Gene>();
-    }
+    [SerializeField] GeneSO speedGene;
 
-    [SerializeField] float maxSpeed;
     [SerializeField] float accelerationSpeed;
 
     Vector2 moveTarget;
@@ -28,6 +23,16 @@ public class Human : Mutable
     private void Start()
     {
         movementCoroutine = StartCoroutine(Movement());
+
+        genome = new Genome();
+    }
+    public virtual void Mutate(float radioctivity)
+    {
+        Genome oldGenome = genome;
+        Genome newGenome = new Genome(oldGenome, radioctivity);
+        OnMutate.Invoke(oldGenome, newGenome);
+
+        genome = newGenome;
     }
     public override void EndDrag()
     {
@@ -61,7 +66,8 @@ public class Human : Mutable
         
         if(!isBeingDragged)
         {
-            transform.position = Vector2.SmoothDamp(transform.position, moveTarget, ref velocity, 1/config.accelerationSpeed, config.maxSpeed);
+            genome.TryGetGeneValue(speedGene, out float maxSpeed);
+            transform.position = Vector2.SmoothDamp(transform.position, moveTarget, ref velocity, 1/config.accelerationSpeed, maxSpeed);
         }
     }
 
