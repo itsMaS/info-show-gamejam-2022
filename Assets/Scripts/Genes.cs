@@ -90,4 +90,20 @@ public class Genome
             return false;
         }
     }
+
+    public static float Relation(Genome g1, Genome g2)
+    {
+        float difference = 0;
+
+        for (int i = 0; i < g1.Genes.Count; i++)
+        {
+            float diff = Mathf.Abs(g1.Genes[i].value - g2.Genes[i].value);
+            difference += diff;
+        }
+
+        difference /= g1.Genes.Count;
+        difference = 1 - difference;
+
+        return difference;
+    }
 }

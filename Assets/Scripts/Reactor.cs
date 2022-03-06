@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(InteractableDragTarget))]
 public class Reactor : Interactable
 {
     public GameConfigSO.Reactor config => State.config.reactor;
@@ -14,6 +16,28 @@ public class Reactor : Interactable
 
     public float fuelRequired => config.baseFuelRequirement;
     public float radioctivityOnExplosion => config.baseRadioactivity;
+
+    InteractableDragTarget target;
+
+    public override void Awake()
+    {
+        base.Awake();
+        target = GetComponent<InteractableDragTarget>();
+    }
+
+    private void Start()
+    {
+        target.onInteractableDraggedOn.AddListener(DraggedOn);
+    }
+
+    private void DraggedOn(Interactable arg0)
+    {
+        if(arg0 is Human)
+        {
+            Human human = (Human)arg0;
+            human.Die();
+        }
+    }
 
     public void AddFuel(float amount)
     {
@@ -32,8 +56,11 @@ public class Reactor : Interactable
         {
             if(col.TryGetComponent(out Human human))
             {
-                float radioctivity = config.radioctivityFaloff.Evaluate(Mathf.InverseLerp(config.baseReactorRange, 0, Vector2.Distance(human.transform.position, reactorCenter))) * radioctivityOnExplosion;
-                human.Mutate(radioctivity);
+                if(Vector2.Distance(human.transform.position, reactorCenter) <= config.baseReactorRange)
+                {
+                    float radioctivity = config.radioctivityFaloff.Evaluate(Mathf.InverseLerp(config.baseReactorRange, 0, Vector2.Distance(human.transform.position, reactorCenter))) * radioctivityOnExplosion;
+                    human.Mutate(radioctivity);
+                }
             }
         }
 
@@ -44,11 +71,5 @@ public class Reactor : Interactable
     {
         base.Click();
         AddFuel(config.baseFuelPerClick);
-    }
-    
-    protected override void OnDrawGizmos()
-    {
-        base.OnDrawGizmos();
-        Gizmos.DrawWireSphere(transform.position, config.baseReactorRange);
     }
 }

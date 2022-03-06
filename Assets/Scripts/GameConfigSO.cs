@@ -20,6 +20,7 @@ public class GameConfigSO : ScriptableObject
     [System.Serializable]
     public class Human
     {
+        public float lifeTimeLossPerRadiation = 0.1f;
         public float accelerationSpeed;
         public Vector2 waitTime;
         public Vector2 targetDistance;
@@ -27,6 +28,10 @@ public class GameConfigSO : ScriptableObject
         public float baseLifespan = 120;
         public AnimationCurve offspringOverFertility;
         public AnimationCurve sizeOverAge;
+        public float ageRequiredToMate = 0.5f;
+        public float matingCooldown = 30;
+        public float relationDifferenceRequiredForMating = 0.3f;
+        public AnimationCurve sizeOverStrength;
     }
 
     [System.Serializable]

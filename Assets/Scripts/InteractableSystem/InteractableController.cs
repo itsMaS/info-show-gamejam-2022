@@ -11,7 +11,6 @@ public class InteractableController : MonoBehaviour
     InteractableDragTarget currentDragTarget;
 
     bool dragging = false;
-
     Vector2 dragStartPoint;
 
     bool TryRaycastAndFindClosest<T>(Vector2 worldPosition, out T hit) where T : Component, IPivotable
@@ -47,6 +46,8 @@ public class InteractableController : MonoBehaviour
 
     void Update()
     {
+        if (dragging && !currentInteractable) dragging = false;
+
         Camera cam = Camera.main;
         Vector2 worldPoint = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -57,7 +58,16 @@ public class InteractableController : MonoBehaviour
             currentInteractable.dragTarget = cam.ScreenToWorldPoint(Input.mousePosition);
             if(TryRaycastAndFindClosest(worldPoint, out InteractableDragTarget newDragTarget))
             {
-                if(!currentDragTarget)
+                if(currentDragTarget)
+                {
+                    if(Vector2.Distance(currentDragTarget.transform.position, worldPoint) > Vector2.Distance(newDragTarget.transform.position, worldPoint))
+                    {
+                        currentDragTarget.InteractableDragUnhover(currentInteractable);
+                        currentDragTarget = newDragTarget;
+                        newDragTarget.InteractableDragHover(currentInteractable);
+                    }
+                }
+                else
                 {
                     currentDragTarget = newDragTarget;
                     currentDragTarget.InteractableDragHover(currentInteractable);
@@ -96,6 +106,7 @@ public class InteractableController : MonoBehaviour
             if(Input.GetMouseButtonDown(0))
             {
                 dragStartPoint = worldPoint;
+                currentInteractable.Click();
             }
 
             if(Input.GetMouseButton(0))
@@ -106,11 +117,6 @@ public class InteractableController : MonoBehaviour
                     currentInteractable.BeginDrag(cursorPosition);
                     dragging = true;
                 }
-            }
-
-            if(Input.GetMouseButtonDown(0))
-            {
-                currentInteractable.Click();
             }
         }
         else

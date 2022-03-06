@@ -32,7 +32,14 @@ public class State : MonoBehaviour
     {
         Events.Start();
 
-        SpawnInitialHumans();
+        CurrentLevelIndex = 0;
+    }
+
+    public LevelRequirementSO CurrentLevelData => Levels[CurrentLevelIndex];
+
+    public void CompleteLevel()
+    {
+        CurrentLevelIndex++;
     }
 
     private void SpawnInitialHumans()
@@ -76,6 +83,9 @@ public class State : MonoBehaviour
 
     public static GameConfigSO config => State.Instance.configSO;
     public static GameEvents Events { get; private set; }
+
+    public List<LevelRequirementSO> Levels;
+    public int CurrentLevelIndex { get; private set; }
 }
 
 public class GameEvents

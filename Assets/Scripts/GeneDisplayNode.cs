@@ -14,6 +14,7 @@ public class GeneDisplayNode : MonoBehaviour
     [SerializeField] Image progressImage;
     [SerializeField] Image oldProgress;
 
+
     internal void Populate(string name, Color color, float v1, float v2, ArrowState state = ArrowState.None)
     {
         geneName.SetText(name);
@@ -40,12 +41,14 @@ public class GeneDisplayNode : MonoBehaviour
             default:
                 break;
         }
+
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
     }
     public static GeneDisplayNode Instantiate(GeneDisplayNode example, Transform parent)
     {
         var cmp = Instantiate(example.gameObject, parent).GetComponent<GeneDisplayNode>();
         cmp.gameObject.SetActive(true);
+        cmp.transform.SetSiblingIndex(cmp.transform.childCount-1);
 
         return cmp;
     }

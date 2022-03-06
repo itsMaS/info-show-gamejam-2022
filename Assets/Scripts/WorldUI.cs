@@ -21,20 +21,33 @@ public class WorldUI : MonoBehaviour
         State.Events.onStartDraggingHuman.AddListener(ShowHumanInfo);
         State.Events.onStopDraggingHuman.AddListener(HideHumanInfo);
 
-        State.Events.onCrossBreedHover.AddListener(BreedHover);
+        State.Events.onCrossBreedHover.AddListener(DisplayBreeding);
         State.Events.onCrossBreedUnhover.AddListener(BreedUnhover);
+    }
+
+    Coroutine breedingDisplayCor;
+
+    IEnumerator BreedingUpdate(Human original, Human target)
+    {
+        while(humanDisplay)
+        {
+            humanDisplay.Repopulate(original, target);
+            yield return null;
+        }
     }
 
     private void BreedUnhover(Human original, Human target)
     {
         Debug.Log($"original is {target.gameObject.name}");
+        StopCoroutine(breedingDisplayCor);
         humanDisplay.Repopulate(original);
     }
 
-    private void BreedHover(Human original, Human target)
+    private void DisplayBreeding(Human original, Human target)
     {
         Debug.Log($"original is {original.gameObject.name} new {target.gameObject.name}");
         humanDisplay.Repopulate(original, target);
+        breedingDisplayCor = StartCoroutine(BreedingUpdate(original, target));
     }
 
     private void HideHumanInfo(Human arg0)
