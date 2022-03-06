@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12d3c5c81882f564d947decc9d51ec8c, type: 3}
-  m_Name: 1
+  m_Name: 2
   m_EditorClassIdentifier: 
-  tutorialText: Drag a human from the tube on the left side into the reactor in the
-    middle.
+  tutorialText: Bright interval above the reactor indicates the range of the specific
+    gene needed for the human to be accepted. Each human spawns with different genes.
+    Find one that fits the criteria.
   Requirements:
-  - data: {fileID: 11400000, guid: 67b292606cdfd1341a7ce283d78a66df, type: 2}
-    range: {x: 0, y: 1}
+  - data: {fileID: 11400000, guid: 5c659446bf6c8434492adfc5d35cc4df, type: 2}
+    range: {x: 0.2, y: 0.4}
   amount: 1

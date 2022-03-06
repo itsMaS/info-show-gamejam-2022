@@ -45,8 +45,22 @@ public class Genome
             Gene picked = Genes.PickRandom();
 
             float oldValue = picked.value;
-            picked.value = Random.value;
-            //picked.value += deviation;
+            //picked.value = Random.value;
+
+            float direction = Random.value > 0.5f ? -1 : 1;
+
+            float deviation = direction * config.mutationAmount.PickRandom();
+            float clamped = Mathf.Clamp01(oldValue + deviation);
+
+            float difference = Mathf.Abs(clamped - oldValue);
+            if(difference < config.mutationAmount.x)
+            {
+                picked.value -= deviation;
+            }
+            else
+            {
+                picked.value += deviation;
+            }
         }
     }
 

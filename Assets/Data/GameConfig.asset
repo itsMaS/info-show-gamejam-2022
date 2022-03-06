@@ -15,7 +15,7 @@ MonoBehaviour:
   reactor:
     baseFuelRequirement: 10
     baseFuelPerClick: 1
-    baseReactorRange: 3
+    baseReactorRange: 4
     radioctivityFaloff:
       serializedVersion: 2
       m_Curve:
@@ -42,12 +42,11 @@ MonoBehaviour:
       m_RotationOrder: 4
     baseRadioactivity: 10
   human:
-    lifeTimeLossPerRadiation: 0.1
+    lifeTimeLossPerRadiation: 0.05
     accelerationSpeed: 2
     waitTime: {x: 1, y: 5}
     targetDistance: {x: 2, y: 5}
     walkSpeedOverGene: {x: 0.5, y: 5}
-    baseLifespan: 120
     offspringOverFertility:
       serializedVersion: 2
       m_Curve:
@@ -141,13 +140,17 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    timespanOverLongevity: {x: 40, y: 200}
   genes:
+    mutationAmount: {x: 0.2, y: 0.5}
     maxMutations: 1
     defaultGenome:
     - {fileID: 11400000, guid: 67b292606cdfd1341a7ce283d78a66df, type: 2}
     - {fileID: 11400000, guid: ac7027b2b334f4049a727be73788df22, type: 2}
     - {fileID: 11400000, guid: 5c659446bf6c8434492adfc5d35cc4df, type: 2}
+    - {fileID: 11400000, guid: 9af0e4c14387a524484d15f1b574c686, type: 2}
   gameplay:
     startingPopulationAge: {x: 0.5, y: 0.6}
     startingPopulationCount: 2
     rangeFromReactor: 4
+    maxHumans: 5

@@ -62,6 +62,8 @@ public class GenesDisplay : MonoBehaviour
                 bool positive = newValue > oldValue;
 
                 cmp.Populate(oldGenome.Genes[i].data.name, positive ? goodColor : badColor, positive ? newValue : oldValue, positive ? oldValue : newValue, positive ? GeneDisplayNode.ArrowState.Up : GeneDisplayNode.ArrowState.Down);
+
+                cmp.AnimateSliders(positive, duration, Ease.InOutCirc);
             }
         }
 

@@ -281,6 +281,7 @@ MonoBehaviour:
   geneName: {fileID: 2896680196411731567}
   progressImage: {fileID: 2896680196244563470}
   oldProgress: {fileID: 2896680196201178362}
+  backgroundImage: {fileID: 2896680196293404361}
 --- !u!114 &2896680196351716119
 MonoBehaviour:
   m_ObjectHideFlags: 0

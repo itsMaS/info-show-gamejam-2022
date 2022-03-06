@@ -5015,6 +5015,7 @@ MonoBehaviour:
   speedGene: {fileID: 11400000, guid: 67b292606cdfd1341a7ce283d78a66df, type: 2}
   fertilityGene: {fileID: 11400000, guid: ac7027b2b334f4049a727be73788df22, type: 2}
   strengthGene: {fileID: 11400000, guid: 5c659446bf6c8434492adfc5d35cc4df, type: 2}
+  longevityGene: {fileID: 11400000, guid: 9af0e4c14387a524484d15f1b574c686, type: 2}
   shadowCollider: {fileID: 6825557949620267835}
   accelerationSpeed: 0
   deathDuration: 1

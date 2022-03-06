@@ -20,6 +20,7 @@ public class Human : Interactable
     [SerializeField] GeneSO speedGene;
     [SerializeField] GeneSO fertilityGene;
     [SerializeField] GeneSO strengthGene;
+    [SerializeField] GeneSO longevityGene;
    
 
     [SerializeField] Collider2D shadowCollider;
@@ -50,7 +51,14 @@ public class Human : Interactable
     public bool oldEnoughToMate => Age > config.ageRequiredToMate;
 
     public float matingCooldown { get; private set; }
-    public float ageingSpeed => 1 / config.baseLifespan;
+    public float ageingSpeed 
+    {
+        get 
+        {
+            genome.TryGetGeneValue(longevityGene, out float longevity);
+            return 1/config.timespanOverLongevity.Evaluate(longevity);
+        } 
+    }
 
     public bool dead = false;
 

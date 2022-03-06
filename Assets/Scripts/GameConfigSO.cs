@@ -25,13 +25,13 @@ public class GameConfigSO : ScriptableObject
         public Vector2 waitTime;
         public Vector2 targetDistance;
         public Vector2 walkSpeedOverGene;
-        public float baseLifespan = 120;
         public AnimationCurve offspringOverFertility;
         public AnimationCurve sizeOverAge;
         public float ageRequiredToMate = 0.5f;
         public float matingCooldown = 30;
         public float relationDifferenceRequiredForMating = 0.3f;
         public AnimationCurve sizeOverStrength;
+        public Vector2 timespanOverLongevity = new Vector2(40, 200);
     }
 
     [System.Serializable]
@@ -40,11 +40,13 @@ public class GameConfigSO : ScriptableObject
         public Vector2 startingPopulationAge;
         public int startingPopulationCount;
         public float rangeFromReactor;
+        public int maxHumans = 10;
     }
 
     [System.Serializable]
     public class Genes
     {
+        public Vector2 mutationAmount = new Vector2(0.2f, 0.5f);
         public int maxMutations;
         public List<GeneSO> defaultGenome; 
     }

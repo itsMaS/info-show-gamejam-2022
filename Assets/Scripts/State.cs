@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,19 +33,55 @@ public class State : MonoBehaviour
     private void Start()
     {
         Events.Start();
+#if UNITY_EDITOR
+        LoadLevel(startLevel);
+#else
         LoadLevel(0);
+#endif
+
+        Events.OnPlaceHumanInReactor.AddListener(PlaceInReactor);
     }
 
+    private void PlaceInReactor(Human arg0)
+    {
+        bool pass = true;
+        foreach (var req in CurrentLevelData.Requirements)
+        {
+            arg0.genome.TryGetGeneValue(req.data, out float value);
+            if(value < req.range.x || value > req.range.y)
+            {
+                pass = false;
+            }
+        }
+
+        if(pass)
+        {
+            levelAmount++;
+
+            if(levelAmount >= CurrentLevelData.amount)
+            {
+                CompleteLevel();
+            }
+        }
+    }
+
+    public int levelAmount { get; private set; }
     public LevelRequirementSO CurrentLevelData => Levels[CurrentLevelIndex];
+
+    [SerializeField] int startLevel = 0;
+
+    public List<Human> Humans = new List<Human>();
 
     public void LoadLevel(int level)
     {
+        levelAmount = 0;
         CurrentLevelIndex = level;
         Events.OnLoadLevel.Invoke(CurrentLevelData);
     }
 
     public void CompleteLevel()
     {
+        Events.OnLevelComplete.Invoke();
         LoadLevel(CurrentLevelIndex + 1);
     }
 
@@ -76,6 +113,13 @@ public class State : MonoBehaviour
 
     public void SpawnHuman(Vector2 position, Genome genome, float age = 0)
     {
+        if(Humans.Count >= config.gameplay.maxHumans)
+        {
+            Human hum = Humans.PickRandom();
+            hum.Die();
+            Humans.Remove(hum);
+        }
+
         Transform editorParent = null;
 #if UNITY_EDITOR
         editorParent = GameObject.Find("Humans").transform;
@@ -83,7 +127,12 @@ public class State : MonoBehaviour
         Human human = Instantiate(humanPrefab.gameObject, position, Quaternion.identity, editorParent).GetComponent<Human>();
 
         human.Spawn(genome, age);
+
+        Humans.Add(human);
+        human.OnDeath.AddListener(() => Humans.Remove(human));
+
         Events.SubscribeToHumanEvents(human);
+        Events.OnHumanSpawn.Invoke(human);
     }
 
 
@@ -99,6 +148,9 @@ public class GameEvents
     public UnityEvent<Human> OnHoverHumanOverReactor = new UnityEvent<Human>();
     public UnityEvent<Human> OnUnhoverHumanOverReactor = new UnityEvent<Human>();
     public UnityEvent<Human> OnPlaceHumanInReactor = new UnityEvent<Human>();
+    public UnityEvent<Human> OnHumanDeath = new UnityEvent<Human>();
+    public UnityEvent<Human> OnHumanSpawn = new UnityEvent<Human>();
+    public UnityEvent OnLevelComplete = new UnityEvent();
 
     public UnityEvent<LevelRequirementSO> OnLoadLevel = new UnityEvent<LevelRequirementSO>();
 
@@ -128,11 +180,12 @@ public class GameEvents
     }
     public void SubscribeToHumanEvents(Human human)
     {
-            human.OnMutate.AddListener((oldGenome, newGenome) => onMutation?.Invoke(human, oldGenome, newGenome));
-            human.onDragBegin.AddListener(() => onStartDraggingHuman.Invoke(human));
-            human.onDragEnd.AddListener(() => onStopDraggingHuman.Invoke(human));
+        human.OnMutate.AddListener((oldGenome, newGenome) => onMutation?.Invoke(human, oldGenome, newGenome));
+        human.onDragBegin.AddListener(() => onStartDraggingHuman.Invoke(human));
+        human.onDragEnd.AddListener(() => onStopDraggingHuman.Invoke(human));
 
-            human.onBreedHover.AddListener((h1, h2) => onCrossBreedHover.Invoke(h2,h1));
-            human.onBreedUnhover.AddListener((h1, h2) => onCrossBreedUnhover.Invoke(h2,h1));
+        human.onBreedHover.AddListener((h1, h2) => onCrossBreedHover.Invoke(h2,h1));
+        human.onBreedUnhover.AddListener((h1, h2) => onCrossBreedUnhover.Invoke(h2,h1));
+        human.OnDeath.AddListener(() => OnHumanDeath.Invoke(human));
     }
 }

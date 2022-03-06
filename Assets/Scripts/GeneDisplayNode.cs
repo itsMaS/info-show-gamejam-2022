@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,9 +14,10 @@ public class GeneDisplayNode : MonoBehaviour
     [SerializeField] TextMeshProUGUI geneName;
     [SerializeField] Image progressImage;
     [SerializeField] Image oldProgress;
+    [SerializeField] Image backgroundImage;
 
 
-    internal void Populate(string name, Color color, float v1, float v2, ArrowState state = ArrowState.None)
+    public void Populate(string name, Color color, float v1, float v2, ArrowState state = ArrowState.None)
     {
         geneName.SetText(name);
 
@@ -43,6 +45,19 @@ public class GeneDisplayNode : MonoBehaviour
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+    }
+    public void ChangeColors(Color background, Color text)
+    {
+        backgroundImage.color = background;
+        geneName.color = text;
+    }
+
+    public void AnimateSliders(bool colored, float duration, Ease ease)
+    {
+        Image from = colored ? progressImage : oldProgress;
+        Image to = colored ? oldProgress : progressImage;
+
+        from.DOFillAmount(to.fillAmount, duration).SetEase(ease);
     }
     public static GeneDisplayNode Instantiate(GeneDisplayNode example, Transform parent)
     {
