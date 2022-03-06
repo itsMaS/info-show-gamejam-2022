@@ -85,7 +85,12 @@ public class Human : Interactable
     {
         if(interactable is Human)
         {
-            onBreedHover.Invoke(this, (Human)interactable);
+            Human human = (Human)interactable;
+
+            if(!human.dead)
+            {
+                onBreedHover.Invoke(this, human);
+            }
         }
     }
     public void DragUnhover(Interactable interactable)

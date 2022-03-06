@@ -11,6 +11,9 @@ public class Reactor : Interactable
 
     public UnityEvent<float> OnAddFuel;
     public UnityEvent onExplode;
+    public UnityEvent<Human> OnHumanHover;
+    public UnityEvent<Human> OnHumanUnhover;
+    public UnityEvent<Human> OnHumanPlacedInside;
 
     public float currentFuel { get; private set; }
 
@@ -28,6 +31,26 @@ public class Reactor : Interactable
     private void Start()
     {
         target.onInteractableDraggedOn.AddListener(DraggedOn);
+        target.onInteractableDragHover.AddListener(DragHover);
+        target.onInteractableDragUnhover.AddListener(DragUnhover);
+    }
+
+    private void DragUnhover(Interactable arg0)
+    {
+        if (arg0 is Human)
+        {
+            Human human = (Human)arg0;
+            OnHumanUnhover.Invoke(human);
+        }
+    }
+
+    private void DragHover(Interactable arg0)
+    {
+        if(arg0 is Human)
+        {
+            Human human = (Human)arg0;
+            OnHumanHover.Invoke(human);
+        }
     }
 
     private void DraggedOn(Interactable arg0)
@@ -35,6 +58,7 @@ public class Reactor : Interactable
         if(arg0 is Human)
         {
             Human human = (Human)arg0;
+            OnHumanPlacedInside.Invoke(human);
             human.Die();
         }
     }

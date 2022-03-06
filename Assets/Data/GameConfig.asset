@@ -42,6 +42,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     baseRadioactivity: 10
   human:
+    lifeTimeLossPerRadiation: 0.1
     accelerationSpeed: 2
     waitTime: {x: 1, y: 5}
     targetDistance: {x: 2, y: 5}
@@ -106,7 +107,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     ageRequiredToMate: 0.5
     matingCooldown: 60
-    relationDifferenceRequiredForMating: 0.6
+    relationDifferenceRequiredForMating: 0.75
     sizeOverStrength:
       serializedVersion: 2
       m_Curve:

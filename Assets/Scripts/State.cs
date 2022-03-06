@@ -25,21 +25,27 @@ public class State : MonoBehaviour
         }
         else
         {
+            Debug.LogError("State already exists, destroying this one");
             DestroyImmediate(gameObject);
         }
     }
     private void Start()
     {
         Events.Start();
-
-        CurrentLevelIndex = 0;
+        LoadLevel(0);
     }
 
     public LevelRequirementSO CurrentLevelData => Levels[CurrentLevelIndex];
 
+    public void LoadLevel(int level)
+    {
+        CurrentLevelIndex = level;
+        Events.OnLoadLevel.Invoke(CurrentLevelData);
+    }
+
     public void CompleteLevel()
     {
-        CurrentLevelIndex++;
+        LoadLevel(CurrentLevelIndex + 1);
     }
 
     private void SpawnInitialHumans()
@@ -90,6 +96,12 @@ public class State : MonoBehaviour
 
 public class GameEvents
 {
+    public UnityEvent<Human> OnHoverHumanOverReactor = new UnityEvent<Human>();
+    public UnityEvent<Human> OnUnhoverHumanOverReactor = new UnityEvent<Human>();
+    public UnityEvent<Human> OnPlaceHumanInReactor = new UnityEvent<Human>();
+
+    public UnityEvent<LevelRequirementSO> OnLoadLevel = new UnityEvent<LevelRequirementSO>();
+
     public UnityEvent<Human, Genome, Genome> onMutation = new UnityEvent<Human, Genome, Genome>();
     public UnityEvent<Human> onStartDraggingHuman = new UnityEvent<Human>();
     public UnityEvent<Human> onStopDraggingHuman = new UnityEvent<Human>();
@@ -104,8 +116,16 @@ public class GameEvents
         {
             SubscribeToHumanEvents(human);
         }
+
+        SubscribeToReactor(GameObject.FindObjectOfType<Reactor>());
     }
 
+    private void SubscribeToReactor(Reactor reactor)
+    {
+        reactor.OnHumanHover.AddListener(human => OnHoverHumanOverReactor.Invoke(human));
+        reactor.OnHumanUnhover.AddListener(human => OnUnhoverHumanOverReactor.Invoke(human));
+        reactor.OnHumanPlacedInside.AddListener(human => OnPlaceHumanInReactor.Invoke(human));
+    }
     public void SubscribeToHumanEvents(Human human)
     {
             human.OnMutate.AddListener((oldGenome, newGenome) => onMutation?.Invoke(human, oldGenome, newGenome));
