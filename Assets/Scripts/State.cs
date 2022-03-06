@@ -111,7 +111,7 @@ public class State : MonoBehaviour
         return bounds.OverlapPoint(point);
     }
 
-    public void SpawnHuman(Vector2 position, Genome genome, float age = 0)
+    public Human SpawnHuman(Vector2 position, Genome genome, float age = 0)
     {
         if(Humans.Count >= config.gameplay.maxHumans)
         {
@@ -133,6 +133,7 @@ public class State : MonoBehaviour
 
         Events.SubscribeToHumanEvents(human);
         Events.OnHumanSpawn.Invoke(human);
+        return human;
     }
 
 
@@ -147,6 +148,9 @@ public class GameEvents
 {
     public UnityEvent<Human> OnHoverHumanOverReactor = new UnityEvent<Human>();
     public UnityEvent<Human> OnUnhoverHumanOverReactor = new UnityEvent<Human>();
+    public UnityEvent OnReactorExplosion = new UnityEvent();
+
+
     public UnityEvent<Human> OnPlaceHumanInReactor = new UnityEvent<Human>();
     public UnityEvent<Human> OnHumanDeath = new UnityEvent<Human>();
     public UnityEvent<Human> OnHumanSpawn = new UnityEvent<Human>();
@@ -177,6 +181,7 @@ public class GameEvents
         reactor.OnHumanHover.AddListener(human => OnHoverHumanOverReactor.Invoke(human));
         reactor.OnHumanUnhover.AddListener(human => OnUnhoverHumanOverReactor.Invoke(human));
         reactor.OnHumanPlacedInside.AddListener(human => OnPlaceHumanInReactor.Invoke(human));
+        reactor.onExplode.AddListener(() => OnReactorExplosion.Invoke());
     }
     public void SubscribeToHumanEvents(Human human)
     {

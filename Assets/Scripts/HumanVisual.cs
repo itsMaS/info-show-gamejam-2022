@@ -12,6 +12,7 @@ public class HumanVisual : MonoBehaviour
     [SerializeField] SpriteRenderer shadow;
     [SerializeField] SpriteRenderer body;
     [SerializeField] ParticleSystem loveParticles;
+    [SerializeField] Transform missionIndication;
 
     [Header("Parameters")]
     [SerializeField] float rotationAmplitude;
@@ -21,6 +22,8 @@ public class HumanVisual : MonoBehaviour
     [SerializeField] float walkSineAmplitude;
     [SerializeField] float walkShadowSineAmplitude;
     [SerializeField] AnimationCurve deathOverAge;
+    [SerializeField] float missionIndicationAppearDuration = 0.3f;
+
 
     Human human;
     Animation anim;
@@ -31,6 +34,8 @@ public class HumanVisual : MonoBehaviour
     Vector2 initialShadowScale;
 
     SortingGroup sg;
+
+    bool passable;
 
     private void Awake()
     {
@@ -59,6 +64,7 @@ public class HumanVisual : MonoBehaviour
     {
         body.material.DOFloat(1, "_death", human.deathDuration);
         shadow.DOFade(0, human.deathDuration);
+        missionIndication.transform.DOScale(0, missionIndicationAppearDuration);
     }
 
     private void BreedUnhover(Human arg0, Human arg1)
@@ -78,7 +84,7 @@ public class HumanVisual : MonoBehaviour
     {
         anim.Play("Mutate");
     }
-  private void Update()
+    private void Update()
     {
         body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTarget, rotationAccelerationSpeed);
 
@@ -88,7 +94,17 @@ public class HumanVisual : MonoBehaviour
         shadow.transform.localScale = initialShadowScale * (1 + wave * walkShadowSineAmplitude);
 
         if(!human.dead)
+        {
             body.material.SetFloat("_death", deathOverAge.Evaluate(human.Age));
+
+            bool hPassable = human.Passable();
+            if(hPassable != passable)
+            {
+                missionIndication.transform.DOScale(hPassable ? 1 : 0, missionIndicationAppearDuration);
+            }
+            missionIndication.gameObject.SetActive(human.Passable());
+        }
+
     }
 
     private void EndDrag()

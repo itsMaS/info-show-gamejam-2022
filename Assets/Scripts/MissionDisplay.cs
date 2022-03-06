@@ -69,11 +69,12 @@ public class MissionDisplay : MonoBehaviour
 
             Nodes[i].Populate(requirement.data.name, complete ? goodColor : badColor, 1, 1, GeneDisplayNode.ArrowState.None);
             Nodes[i].ChangeColors(complete ? goodColor : badColor, complete ? goodColor : badColor);
+
         }
 
+        amountText.color = allComplete ? goodColor : badColor;
         if(allComplete)
         {
-            amountText.color = goodColor;
             amountText.SetText($"{State.Instance.levelAmount + 1}/{loaded.amount}");
         }
     }

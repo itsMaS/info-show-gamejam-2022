@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InteractableController : MonoBehaviour
 {
+    public UnityEvent<Interactable> OnInteract;
+    public UnityEvent<InteractableDragTarget> OnRelease;
+    public UnityEvent<InteractableDragTarget> OnHoverObject;
+    public UnityEvent<InteractableDragTarget> OnUnhoverObject;
+
     [SerializeField] float dragThreshold;
 
     Interactable currentInteractable;
@@ -24,7 +30,7 @@ public class InteractableController : MonoBehaviour
         {
             if (col.collider.TryGetComponent(out T hitInteractable))
             {
-                float distance = Vector2.Distance(worldPosition, hitInteractable.pickupPosition);
+                float distance = Vector2.Distance(worldPosition, (Vector2)hitInteractable.transform.position + hitInteractable.pickupPosition);
                 if (distance < minDistance)
                 {
                     minDistance = distance;
@@ -63,13 +69,16 @@ public class InteractableController : MonoBehaviour
                     if(Vector2.Distance(currentDragTarget.transform.position, worldPoint) > Vector2.Distance(newDragTarget.transform.position, worldPoint))
                     {
                         currentDragTarget.InteractableDragUnhover(currentInteractable);
+                        OnRelease.Invoke(currentDragTarget);
                         currentDragTarget = newDragTarget;
+                        OnHoverObject.Invoke(newDragTarget);
                         newDragTarget.InteractableDragHover(currentInteractable);
                     }
                 }
                 else
                 {
                     currentDragTarget = newDragTarget;
+                    OnHoverObject.Invoke(newDragTarget);
                     currentDragTarget.InteractableDragHover(currentInteractable);
                 }
             }
@@ -77,6 +86,7 @@ public class InteractableController : MonoBehaviour
             {
                 if(currentDragTarget)
                 {
+                    OnUnhoverObject.Invoke(newDragTarget);
                     currentDragTarget.InteractableDragUnhover(currentInteractable);
                     currentDragTarget = null;
                 }
@@ -107,6 +117,7 @@ public class InteractableController : MonoBehaviour
             {
                 dragStartPoint = worldPoint;
                 currentInteractable.Click();
+                OnInteract.Invoke(currentInteractable);
             }
 
             if(Input.GetMouseButton(0))

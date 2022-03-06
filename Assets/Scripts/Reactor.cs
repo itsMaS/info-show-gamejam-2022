@@ -59,6 +59,7 @@ public class Reactor : Interactable
         {
             Human human = (Human)arg0;
             OnHumanPlacedInside.Invoke(human);
+            AddFuel(config.fuelPerPerson);
             human.Die();
         }
     }

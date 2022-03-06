@@ -15,6 +15,7 @@ public class GameConfigSO : ScriptableObject
         [Header("Radioactivity")]
         public AnimationCurve radioctivityFaloff;
         public float baseRadioactivity;
+        public float fuelPerPerson;
     }
 
     [System.Serializable]

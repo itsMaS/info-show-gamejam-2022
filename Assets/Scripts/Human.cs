@@ -39,6 +39,7 @@ public class Human : Interactable
     }
     public float Age { get; private set; }
 
+
     Vector2 moveTarget;
     
     public Vector2 velocity;
@@ -148,6 +149,7 @@ public class Human : Interactable
 
     public virtual void Die()
     {
+        if (dead) return;
         dead = true;
         OnDeath.Invoke();
         Destroy(gameObject, deathDuration);
@@ -165,6 +167,22 @@ public class Human : Interactable
 
         Age += config.lifeTimeLossPerRadiation;
     }
+
+    public bool Passable()
+    {
+        bool allComplete = true;
+        for (int i = 0; i < State.Instance.CurrentLevelData.Requirements.Count; i++)
+        {
+            LevelRequirementSO.GeneRequirement requirement = State.Instance.CurrentLevelData.Requirements[i];
+
+            genome.TryGetGeneValue(requirement.data, out float value);
+            bool complete = value >= requirement.range.x && value <= requirement.range.y;
+            if (!complete) allComplete = false;
+
+        }
+        return allComplete;
+    }
+
     public override void EndDrag()
     {
         base.EndDrag();
@@ -180,6 +198,10 @@ public class Human : Interactable
         velocity = Vector3.zero;
 
         shadowCollider.enabled = false;
+    }
+    public void SetMovePosition(Vector2 positon)
+    {
+        moveTarget = positon;
     }
     IEnumerator Movement()
     {

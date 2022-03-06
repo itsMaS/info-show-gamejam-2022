@@ -12,6 +12,7 @@ public class ReactorVisual : MonoBehaviour
     [SerializeField] SpriteRenderer explosion;
     [SerializeField] SpriteRenderer rangeIndicator;
     [SerializeField] SpriteRenderer chargeSprite;
+    [SerializeField] AudioSource levelUp;
 
     [Header("Parameters")]
     [SerializeField] float clickAnimationDuration;
@@ -36,6 +37,8 @@ public class ReactorVisual : MonoBehaviour
         reactor.onExplode.AddListener(Explode);
 
         rangeIndicator.transform.localScale = Vector3.one * reactor.config.baseReactorRange * 2;
+
+        State.Events.OnLevelComplete.AddListener(() => levelUp.Play());
     }
 
     private void Explode()

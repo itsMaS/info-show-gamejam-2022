@@ -41,10 +41,11 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     baseRadioactivity: 10
+    fuelPerPerson: 2
   human:
     lifeTimeLossPerRadiation: 0.05
     accelerationSpeed: 2
-    waitTime: {x: 1, y: 5}
+    waitTime: {x: 3, y: 8}
     targetDistance: {x: 2, y: 5}
     walkSpeedOverGene: {x: 0.5, y: 5}
     offspringOverFertility:
@@ -106,7 +107,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     ageRequiredToMate: 0.5
     matingCooldown: 60
-    relationDifferenceRequiredForMating: 0.75
+    relationDifferenceRequiredForMating: 0.95
     sizeOverStrength:
       serializedVersion: 2
       m_Curve:
