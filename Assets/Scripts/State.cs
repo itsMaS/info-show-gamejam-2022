@@ -85,17 +85,6 @@ public class State : MonoBehaviour
         LoadLevel(CurrentLevelIndex + 1);
     }
 
-    private void SpawnInitialHumans()
-    {
-        int populationCount = config.gameplay.startingPopulationCount;
-        for (int i = 0; i < populationCount; i++)
-        {
-            float offset = (float)i / populationCount;
-            Vector2 direction = Vector2.up * 0.5f * Mathf.Sin(Mathf.PI * 2 * offset) + Vector2.right * Mathf.Cos(Mathf.PI * 2 * offset);
-            SpawnHuman(direction * config.gameplay.rangeFromReactor, new Genome(true), config.gameplay.startingPopulationAge.PickRandom());
-        }
-    }
-
     private void Initialize()
     {
         _instance = this;

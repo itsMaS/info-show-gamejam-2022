@@ -61,7 +61,7 @@ public class InteractableController : MonoBehaviour
 
         if(dragging)
         {
-            currentInteractable.dragTarget = cam.ScreenToWorldPoint(Input.mousePosition);
+            currentInteractable.dragTarget = worldPoint;
             if(TryRaycastAndFindClosest(worldPoint, out InteractableDragTarget newDragTarget))
             {
                 if(currentDragTarget)
@@ -125,6 +125,7 @@ public class InteractableController : MonoBehaviour
                 if(Vector2.Distance(dragStartPoint, worldPoint) >= dragThreshold)
                 {
                     Vector2 cursorPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+                    currentInteractable.dragTarget = worldPoint;
                     currentInteractable.BeginDrag(cursorPosition);
                     dragging = true;
                 }

@@ -39,7 +39,6 @@ public class GameConfigSO : ScriptableObject
     public class Gameplay
     {
         public Vector2 startingPopulationAge;
-        public int startingPopulationCount;
         public float rangeFromReactor;
         public int maxHumans = 10;
     }

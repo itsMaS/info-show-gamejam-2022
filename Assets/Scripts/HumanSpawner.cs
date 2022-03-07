@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class HumanSpawner : Interactable
 {
-    Collider2D col;
+    Collider2D pickCollider;
     public override void Awake()
     {
         base.Awake();
-        col = GetComponent<Collider2D>();
+        pickCollider = GetComponent<Collider2D>();
     }
     public override void Click()
     {
@@ -19,7 +19,7 @@ public class HumanSpawner : Interactable
 
         human.SetMovePosition(transform.position + Vector3.up * -5);
 
-        col.enabled = false;
-        DOVirtual.DelayedCall(0.5f, () => col.enabled = true);
+        pickCollider.enabled = false;
+        DOVirtual.DelayedCall(0.5f, () => pickCollider.enabled = true);
     }
 }

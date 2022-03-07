@@ -41,7 +41,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     baseRadioactivity: 10
-    fuelPerPerson: 2
+    fuelPerPerson: 0
   human:
     lifeTimeLossPerRadiation: 0.05
     accelerationSpeed: 2
@@ -106,7 +106,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     ageRequiredToMate: 0.5
-    matingCooldown: 60
+    matingCooldown: 20
     relationDifferenceRequiredForMating: 0.95
     sizeOverStrength:
       serializedVersion: 2
@@ -141,7 +141,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    timespanOverLongevity: {x: 40, y: 200}
+    timespanOverLongevity: {x: 60, y: 200}
   genes:
     mutationAmount: {x: 0.2, y: 0.5}
     maxMutations: 1
@@ -151,7 +151,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5c659446bf6c8434492adfc5d35cc4df, type: 2}
     - {fileID: 11400000, guid: 9af0e4c14387a524484d15f1b574c686, type: 2}
   gameplay:
-    startingPopulationAge: {x: 0.5, y: 0.6}
-    startingPopulationCount: 2
+    startingPopulationAge: {x: 0.4, y: 0.5}
     rangeFromReactor: 4
-    maxHumans: 5
+    maxHumans: 15
